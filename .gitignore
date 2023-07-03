@@ -7,3 +7,4 @@ config.ini
 database.sqlite
 .python-version
 **.env
+save.file
