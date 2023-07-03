@@ -18,32 +18,36 @@ today_format = today.strftime("%B %d, %Y")
 lemmy = Lemmy(INSTANCE)
 lemmy.log_in(USERNAME, PASSWORD)
 
-regex = r'(\"id\":\s\d+)'
-
 def weekly_home_post():      
         #get community ID here based on name
         # UNCOMMENT THE NEXT LINE FOR TESTING AND COMMENT OUT ACTUAL INSTANCE
-        community_id = lemmy.discover_community(COMMUNITY)
-        #community_id = lemmy.discover_community("Home")
+        #community_id = lemmy.discover_community(COMMUNITY)
+        community_id = lemmy.discover_community("Home")
         
         #debug
         print("Creating Weekly Thread in Home", today_format)
         
-        lemmy.post.create(community_id,name="Lemmy.zip Weekly Chat - " + today_format,body="Hey there, this is the weekly thread for all general topics and any questions. You can also join us on [Matrix](https://matrix.to/#/#lemmy.zip:matrix.org) for a chat!")
+        home_output = lemmy.post.create(community_id,name="Lemmy.zip Weekly Chat - " + today_format,body="Hey there, this is the weekly thread for all general topics and any questions. You can also join us on [Matrix](https://matrix.to/#/#lemmy.zip:matrix.org) for a chat!")
+
+        post_id = home_output['post_view']['post']['id']
+
+        #use .local for local pin or .community for community pin
+        lemmy.post.feature(post_id, True, feature_type=FeatureType.Community)
 
 def weekly_gaming_post():
 
         #get community
         # UNCOMMENT THE NEXT LINE FOR TESTING AND COMMENT OUT ACTUAL INSTANCE
-        community_id = lemmy.discover_community(COMMUNITY)
-        #community_id = lemmy.discover_community("Gaming")
+        #community_id = lemmy.discover_community(COMMUNITY)
+        community_id = lemmy.discover_community("Gaming")
         
         #debug
         print("Creating Weekly Thread in Gaming", today_format)
         
-        output = lemmy.post.create(community_id,name="What Are You Playing This Week? " + today_format + " edition",body="Hey there everybody! Weekly check-in time once again. So... What are you playing this week?")
+        gaming_output = lemmy.post.create(community_id,name="What Are You Playing This Week? " + today_format + " edition",body="Hey there everybody! Weekly check-in time once again. So... What are you playing this week?")
         
-        post_id = output['post_view']['post']['id']
+        post_id = gaming_output['post_view']['post']['id']
 
-        lemmy.post.feature(post_id, True, feature_type=FeatureType.Local)
+        #use .local for local pin or .community for community pin
+        lemmy.post.feature(post_id, True, feature_type=FeatureType.Community)
 
