@@ -65,9 +65,6 @@ def weekly_gaming_post():
         #community_id = lemmy.discover_community(COMMUNITY)
         community_id = lemmy.discover_community("Gaming")
         
-        get_post_list = lemmy.post.list(community_id)
-
-        #print(get_post_list)
         #debug
         print("Creating Weekly Thread in Gaming", today_format)
         
