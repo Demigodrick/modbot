@@ -1,2 +1,10 @@
-*.env
-__*
+.Python
+.venv/
+.vscode/
+__pycache__/
+
+config.ini
+database.sqlite
+.python-version
+**.env
+save.file

@@ -1,8 +1,8 @@
 from pythorhead import Lemmy
+from pythorhead.types import FeatureType
 from dotenv import dotenv_values
 from datetime import date
-from pythorhead.types import FeatureType
-
+import os
 
 config = dotenv_values(".env")
 
@@ -17,6 +17,26 @@ today = date.today()
 today_format = today.strftime("%B %d, %Y")
 lemmy = Lemmy(INSTANCE)
 lemmy.log_in(USERNAME, PASSWORD)
+
+def load_pinned_posts():
+        #open save file with IDs of posts and unpin them.
+        save = open("save.file","r")
+        count = 0
+
+        while True:
+                count += 1
+                line = save.readline()
+                if not line:
+                        break
+                post_id = line.rstrip()        
+                lemmy.post.feature(int(post_id), False, FeatureType.Community)
+                print("Post " + post_id + " unpinned.")
+        save.close()
+        
+        os.remove("save.file")
+        open("save.file",'a').close()
+
+
 
 def weekly_home_post():      
         #get community ID here based on name
@@ -34,6 +54,10 @@ def weekly_home_post():
         #use .local for local pin or .community for community pin
         lemmy.post.feature(post_id, True, feature_type=FeatureType.Community)
 
+        save = open("save.file","a")
+        save.write(str(post_id)+"\n")
+        save.close()
+
 def weekly_gaming_post():
 
         #get community
@@ -41,6 +65,9 @@ def weekly_gaming_post():
         #community_id = lemmy.discover_community(COMMUNITY)
         community_id = lemmy.discover_community("Gaming")
         
+        get_post_list = lemmy.post.list(community_id)
+
+        #print(get_post_list)
         #debug
         print("Creating Weekly Thread in Gaming", today_format)
         
@@ -51,3 +78,6 @@ def weekly_gaming_post():
         #use .local for local pin or .community for community pin
         lemmy.post.feature(post_id, True, feature_type=FeatureType.Community)
 
+        save = open("save.file","a")
+        save.write(str(post_id)+"\n")
+        save.close()
